@@ -1,4 +1,4 @@
-import { BadRequestException } from "@nestjs/common";
+import { BadRequestException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import {JwtService} from "@nestjs/jwt";
 import {Test} from "@nestjs/testing";
 import {getRepositoryToken} from "@nestjs/typeorm";
@@ -7,7 +7,7 @@ import {UserEntity} from "../user/user.entity";
 import {UserService} from "../user/user.service";
 import {AuthController} from "./auth.controller";
 import {AuthService} from "./auth.service";
-import {RegisterDto} from "./dto/auth.dto";
+import {LoginDto, RegisterDto} from "./dto/auth.dto";
 
 
 describe('AuthController', () => {

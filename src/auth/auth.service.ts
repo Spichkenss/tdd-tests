@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserEntity } from "../user/user.entity";
-import { RegisterDto } from './dto/auth.dto';
-import {genSalt, hash} from "bcryptjs"
+import { LoginDto, RegisterDto } from './dto/auth.dto';
+import {genSalt, hash, compare} from "bcryptjs"
 
 @Injectable()
 export class AuthService {
@@ -48,4 +48,28 @@ export class AuthService {
         }
     }
 
+    async login(dto: LoginDto){
+        const user = await this.validateUser(dto)
+
+        return {
+            user: this.returnUserFields(user),
+            accessToken: await this.createAccesToken(user.id)
+        }
+    }
+
+    async validateUser(dto: LoginDto){
+        const user = await this.userRepository.findOne({
+            where: {
+                email: dto.email
+            },
+            select: ['id', 'email', 'password']
+        })
+
+        if (!user) throw new NotFoundException("Полльзователь не найден!")
+
+        const isPasswordValid = await compare(dto.password, user.password)
+        if (!isPasswordValid) throw new UnauthorizedException("Неверный логин или пароль!")
+
+        return user
+    }
 }
