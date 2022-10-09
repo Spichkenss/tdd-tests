@@ -1,3 +1,4 @@
+import { BadRequestException } from "@nestjs/common";
 import {JwtService} from "@nestjs/jwt";
 import {Test} from "@nestjs/testing";
 import {getRepositoryToken} from "@nestjs/typeorm";
@@ -37,7 +38,16 @@ describe('AuthController', () => {
             expect(authService.register).toBeCalledWith(dto)
             expect(data).toEqual(response)
         })
-
+        
+        test('throw error "user already exists"', async () => {
+          response = BadRequestException
+          jest.spyOn(authService, 'register').mockReturnValue(response)
+          await authController.register(dto)
+          const data = await authController.register(dto)
+          expect(authService.register).toBeCalledTimes(2)
+          expect(authService.register).toBeCalledWith(dto)
+          expect(data).toEqual(response)
+      })
     })
 
     afterEach(() => {
