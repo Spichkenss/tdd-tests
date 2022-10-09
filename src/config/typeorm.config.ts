@@ -7,7 +7,7 @@ export const getTypeOrmConfig = (configService: ConfigService): TypeOrmModuleOpt
     port: 5432,
     username: 'postgres',
     password: 'root',
-    database: 'tdd-testing',
+    database: 'tdd-tests',
     autoLoadEntities: true,
     synchronize: true,
 })
