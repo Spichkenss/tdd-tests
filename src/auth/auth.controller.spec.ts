@@ -38,7 +38,7 @@ describe('AuthController', () => {
             expect(authService.register).toBeCalledWith(dto)
             expect(data).toEqual(response)
         })
-        
+
         test('throw error "user already exists"', async () => {
           response = BadRequestException
           jest.spyOn(authService, 'register').mockReturnValue(response)
@@ -48,6 +48,42 @@ describe('AuthController', () => {
           expect(authService.register).toBeCalledWith(dto)
           expect(data).toEqual(response)
       })
+
+    })
+describe('login', () => {
+        let response
+        let dto: LoginDto = {email: 'test@mail.ru', password: '12345'}
+
+        test('successful login', async () => {
+            response = {user: {id: expect.any(Number), email: dto.email,}, accessToken: expect.any(String)}
+
+            jest.spyOn(authService, 'login').mockReturnValue(response)
+
+            const data = await authController.login(dto)
+
+            expect(authService.login).toBeCalledWith(dto)
+            expect(data).toEqual(response)
+        })
+
+        test('user not found', async () => {
+            response = NotFoundException
+
+            jest.spyOn(authService, 'validateUser').mockReturnValue(response)
+
+            const data = await authService.validateUser(dto)
+            expect(data).toEqual(response)
+        })
+
+        test('wrong login or password', async () => {
+            response = UnauthorizedException
+
+            jest.spyOn(authService, 'validateUser').mockReturnValue(response)
+
+            const data = await authService.validateUser(dto)
+            expect(data).toEqual(response)
+        })
+
+
     })
 
     afterEach(() => {
