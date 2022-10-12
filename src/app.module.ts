@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import {AuthModule} from "./auth/auth.module";
 import {getTypeOrmConfig} from "./config/typeorm.config";
 import {UserModule} from "./user/user.module";
+import { PostModule } from './post/post.module';
 
 
 @Module({
@@ -16,7 +17,7 @@ import {UserModule} from "./user/user.module";
       inject: [ConfigService],
       useFactory: getTypeOrmConfig,
     }),
-    UserModule, AuthModule
+    UserModule, AuthModule, PostModule
   ],
   controllers: [AppController],
   providers: [AppService],
