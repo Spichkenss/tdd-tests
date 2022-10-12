@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {CreatePostDto} from "./dto/post.dto";
@@ -24,6 +24,7 @@ export class PostService {
 
     async remove(id: number){
         const post = await this.postRepository.findOneBy({id})
+        if (!post) throw new NotFoundException('Поста с таким id не существует')
         await this.postRepository.remove(post)
 
         return {
