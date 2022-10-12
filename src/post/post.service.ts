@@ -22,6 +22,15 @@ export class PostService {
         }
     }
 
+    async remove(id: number){
+        const post = await this.postRepository.findOneBy({id})
+        await this.postRepository.remove(post)
+
+        return {
+            message: 'Пост успешно удален'
+        }
+    }
+
     returnPostFields(post: PostEntity){
         return {
             id: post.id,
