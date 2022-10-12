@@ -34,4 +34,21 @@ describe('PostController', () => {
       expect(data).toEqual(response)
     })
   })
+
+  describe('remove', () => {
+    let response
+    let dto: number = 1
+
+    test('successfull remove', async () => {
+      response = {message: 'Пост успешно удален'}
+      jest.spyOn(postService, 'remove').mockReturnValue(response)
+      const data = await postController.remove(dto)
+      expect(postService.remove).toBeCalledWith(dto)
+      expect(data).toEqual(response)
+    })
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
 });
